@@ -10,6 +10,8 @@
 #import "YLGIFImage.h"
 #import <QuartzCore/QuartzCore.h>
 
+#define kGMCFCoreFoundationVersionNumber_iPhoneOS_8_0 1140.100000
+
 @interface YLImageView ()
 
 @property (nonatomic, strong) YLGIFImage *animatedImage;
