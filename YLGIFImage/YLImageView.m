@@ -84,7 +84,16 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
     self.accumulator = 0;
     
     if ([image isKindOfClass:[YLGIFImage class]] && image.images) {
-		[super setImage:nil];
+		if (kCFCoreFoundationVersionNumber >= kGMCFCoreFoundationVersionNumber_iPhoneOS_8_0) {
+			if ([image.images[0] isKindOfClass:[UIImage class]])
+				[super setImage:image.images[0]];
+			else
+				[super setImage:nil];
+		}
+		else {
+			// iOS 7 or earlier.
+			[super setImage:nil];
+		}
         self.currentFrame = nil;
         self.animatedImage = (YLGIFImage *)image;
         self.loopCountdown = self.animatedImage.loopCount ?: NSUIntegerMax;
