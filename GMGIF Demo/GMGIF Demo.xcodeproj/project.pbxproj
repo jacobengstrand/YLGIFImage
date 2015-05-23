@@ -1,0 +1,477 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		165287951B11388900ED3E29 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 165287941B11388900ED3E29 /* main.m */; };
+		165287981B11388900ED3E29 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 165287971B11388900ED3E29 /* AppDelegate.m */; };
+		1652879B1B11388900ED3E29 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1652879A1B11388900ED3E29 /* ViewController.m */; };
+		1652879E1B11388900ED3E29 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1652879C1B11388900ED3E29 /* Main.storyboard */; };
+		165287A01B11388900ED3E29 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1652879F1B11388900ED3E29 /* Images.xcassets */; };
+		165287A31B11388900ED3E29 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 165287A11B11388900ED3E29 /* LaunchScreen.xib */; };
+		165287AF1B11388900ED3E29 /* GMGIF_DemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 165287AE1B11388900ED3E29 /* GMGIF_DemoTests.m */; };
+		165287B91B11390E00ED3E29 /* joy.gif in Resources */ = {isa = PBXBuildFile; fileRef = 165287B81B11390E00ED3E29 /* joy.gif */; };
+		165287BE1B113BA600ED3E29 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 165287BD1B113BA600ED3E29 /* CoreGraphics.framework */; };
+		165287C01B113BF700ED3E29 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 165287BF1B113BF700ED3E29 /* UIKit.framework */; };
+		165287C21B113C1200ED3E29 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 165287C11B113C1200ED3E29 /* Foundation.framework */; };
+		165287CB1B113CEF00ED3E29 /* YLGIFImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 165287C81B113CEF00ED3E29 /* YLGIFImage.m */; };
+		165287CC1B113CEF00ED3E29 /* YLImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 165287CA1B113CEF00ED3E29 /* YLImageView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		165287A91B11388900ED3E29 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 165287871B11388900ED3E29 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1652878E1B11388900ED3E29;
+			remoteInfo = "GMGIF Demo";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1652878F1B11388900ED3E29 /* GMGIF Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GMGIF Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		165287931B11388900ED3E29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		165287941B11388900ED3E29 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		165287961B11388900ED3E29 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		165287971B11388900ED3E29 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		165287991B11388900ED3E29 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		1652879A1B11388900ED3E29 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		1652879D1B11388900ED3E29 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1652879F1B11388900ED3E29 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		165287A21B11388900ED3E29 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		165287A81B11388900ED3E29 /* GMGIF DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GMGIF DemoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		165287AD1B11388900ED3E29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		165287AE1B11388900ED3E29 /* GMGIF_DemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GMGIF_DemoTests.m; sourceTree = "<group>"; };
+		165287B81B11390E00ED3E29 /* joy.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = joy.gif; sourceTree = SOURCE_ROOT; };
+		165287BD1B113BA600ED3E29 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		165287BF1B113BF700ED3E29 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		165287C11B113C1200ED3E29 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		165287C71B113CEF00ED3E29 /* YLGIFImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YLGIFImage.h; path = ../../YLGIFImage/YLGIFImage.h; sourceTree = "<group>"; };
+		165287C81B113CEF00ED3E29 /* YLGIFImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YLGIFImage.m; path = ../../YLGIFImage/YLGIFImage.m; sourceTree = "<group>"; };
+		165287C91B113CEF00ED3E29 /* YLImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YLImageView.h; path = ../../YLGIFImage/YLImageView.h; sourceTree = "<group>"; };
+		165287CA1B113CEF00ED3E29 /* YLImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YLImageView.m; path = ../../YLGIFImage/YLImageView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1652878C1B11388900ED3E29 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				165287C01B113BF700ED3E29 /* UIKit.framework in Frameworks */,
+				165287C21B113C1200ED3E29 /* Foundation.framework in Frameworks */,
+				165287BE1B113BA600ED3E29 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		165287A51B11388900ED3E29 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		165287861B11388900ED3E29 = {
+			isa = PBXGroup;
+			children = (
+				165287911B11388900ED3E29 /* GMGIF Demo */,
+				165287AB1B11388900ED3E29 /* GMGIF DemoTests */,
+				165287901B11388900ED3E29 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		165287901B11388900ED3E29 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1652878F1B11388900ED3E29 /* GMGIF Demo.app */,
+				165287A81B11388900ED3E29 /* GMGIF DemoTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		165287911B11388900ED3E29 /* GMGIF Demo */ = {
+			isa = PBXGroup;
+			children = (
+				165287CD1B113CF700ED3E29 /* YLGIFImage */,
+				165287961B11388900ED3E29 /* AppDelegate.h */,
+				165287971B11388900ED3E29 /* AppDelegate.m */,
+				165287991B11388900ED3E29 /* ViewController.h */,
+				1652879A1B11388900ED3E29 /* ViewController.m */,
+				1652879C1B11388900ED3E29 /* Main.storyboard */,
+				1652879F1B11388900ED3E29 /* Images.xcassets */,
+				165287A11B11388900ED3E29 /* LaunchScreen.xib */,
+				165287B81B11390E00ED3E29 /* joy.gif */,
+				165287BD1B113BA600ED3E29 /* CoreGraphics.framework */,
+				165287C11B113C1200ED3E29 /* Foundation.framework */,
+				165287BF1B113BF700ED3E29 /* UIKit.framework */,
+				165287921B11388900ED3E29 /* Supporting Files */,
+			);
+			path = "GMGIF Demo";
+			sourceTree = "<group>";
+		};
+		165287921B11388900ED3E29 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				165287931B11388900ED3E29 /* Info.plist */,
+				165287941B11388900ED3E29 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		165287AB1B11388900ED3E29 /* GMGIF DemoTests */ = {
+			isa = PBXGroup;
+			children = (
+				165287AE1B11388900ED3E29 /* GMGIF_DemoTests.m */,
+				165287AC1B11388900ED3E29 /* Supporting Files */,
+			);
+			path = "GMGIF DemoTests";
+			sourceTree = "<group>";
+		};
+		165287AC1B11388900ED3E29 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				165287AD1B11388900ED3E29 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		165287CD1B113CF700ED3E29 /* YLGIFImage */ = {
+			isa = PBXGroup;
+			children = (
+				165287C71B113CEF00ED3E29 /* YLGIFImage.h */,
+				165287C81B113CEF00ED3E29 /* YLGIFImage.m */,
+				165287C91B113CEF00ED3E29 /* YLImageView.h */,
+				165287CA1B113CEF00ED3E29 /* YLImageView.m */,
+			);
+			name = YLGIFImage;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1652878E1B11388900ED3E29 /* GMGIF Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 165287B21B11388900ED3E29 /* Build configuration list for PBXNativeTarget "GMGIF Demo" */;
+			buildPhases = (
+				1652878B1B11388900ED3E29 /* Sources */,
+				1652878C1B11388900ED3E29 /* Frameworks */,
+				1652878D1B11388900ED3E29 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "GMGIF Demo";
+			productName = "GMGIF Demo";
+			productReference = 1652878F1B11388900ED3E29 /* GMGIF Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		165287A71B11388900ED3E29 /* GMGIF DemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 165287B51B11388900ED3E29 /* Build configuration list for PBXNativeTarget "GMGIF DemoTests" */;
+			buildPhases = (
+				165287A41B11388900ED3E29 /* Sources */,
+				165287A51B11388900ED3E29 /* Frameworks */,
+				165287A61B11388900ED3E29 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				165287AA1B11388900ED3E29 /* PBXTargetDependency */,
+			);
+			name = "GMGIF DemoTests";
+			productName = "GMGIF DemoTests";
+			productReference = 165287A81B11388900ED3E29 /* GMGIF DemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		165287871B11388900ED3E29 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = GroupMe;
+				TargetAttributes = {
+					1652878E1B11388900ED3E29 = {
+						CreatedOnToolsVersion = 6.3.2;
+					};
+					165287A71B11388900ED3E29 = {
+						CreatedOnToolsVersion = 6.3.2;
+						TestTargetID = 1652878E1B11388900ED3E29;
+					};
+				};
+			};
+			buildConfigurationList = 1652878A1B11388900ED3E29 /* Build configuration list for PBXProject "GMGIF Demo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 165287861B11388900ED3E29;
+			productRefGroup = 165287901B11388900ED3E29 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1652878E1B11388900ED3E29 /* GMGIF Demo */,
+				165287A71B11388900ED3E29 /* GMGIF DemoTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1652878D1B11388900ED3E29 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1652879E1B11388900ED3E29 /* Main.storyboard in Resources */,
+				165287B91B11390E00ED3E29 /* joy.gif in Resources */,
+				165287A31B11388900ED3E29 /* LaunchScreen.xib in Resources */,
+				165287A01B11388900ED3E29 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		165287A61B11388900ED3E29 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1652878B1B11388900ED3E29 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1652879B1B11388900ED3E29 /* ViewController.m in Sources */,
+				165287CB1B113CEF00ED3E29 /* YLGIFImage.m in Sources */,
+				165287CC1B113CEF00ED3E29 /* YLImageView.m in Sources */,
+				165287981B11388900ED3E29 /* AppDelegate.m in Sources */,
+				165287951B11388900ED3E29 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		165287A41B11388900ED3E29 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				165287AF1B11388900ED3E29 /* GMGIF_DemoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		165287AA1B11388900ED3E29 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1652878E1B11388900ED3E29 /* GMGIF Demo */;
+			targetProxy = 165287A91B11388900ED3E29 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1652879C1B11388900ED3E29 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1652879D1B11388900ED3E29 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		165287A11B11388900ED3E29 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				165287A21B11388900ED3E29 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		165287B01B11388900ED3E29 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../YLGIFImage/,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		165287B11B11388900ED3E29 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../YLGIFImage/,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		165287B31B11388900ED3E29 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "GMGIF Demo/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		165287B41B11388900ED3E29 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "GMGIF Demo/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		165287B61B11388900ED3E29 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "GMGIF DemoTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GMGIF Demo.app/GMGIF Demo";
+			};
+			name = Debug;
+		};
+		165287B71B11388900ED3E29 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "GMGIF DemoTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GMGIF Demo.app/GMGIF Demo";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1652878A1B11388900ED3E29 /* Build configuration list for PBXProject "GMGIF Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				165287B01B11388900ED3E29 /* Debug */,
+				165287B11B11388900ED3E29 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		165287B21B11388900ED3E29 /* Build configuration list for PBXNativeTarget "GMGIF Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				165287B31B11388900ED3E29 /* Debug */,
+				165287B41B11388900ED3E29 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		165287B51B11388900ED3E29 /* Build configuration list for PBXNativeTarget "GMGIF DemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				165287B61B11388900ED3E29 /* Debug */,
+				165287B71B11388900ED3E29 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 165287871B11388900ED3E29 /* Project object */;
+}
