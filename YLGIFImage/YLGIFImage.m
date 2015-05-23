@@ -213,7 +213,7 @@ static NSUInteger _prefetchedNum = 10;
     @synchronized(self.images) {
         frame = self.images[idx];
     }
-    if(!frame) {
+	if([frame isKindOfClass:[NSNull class]]) {
         CGImageRef image = CGImageSourceCreateImageAtIndex(_imageSourceRef, idx, NULL);
         frame = [UIImage imageWithCGImage:image scale:_scale orientation:UIImageOrientationUp];
         CFRelease(image);
