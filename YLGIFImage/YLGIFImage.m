@@ -218,10 +218,13 @@ static NSUInteger _prefetchedNum = 10;
         CFRelease(image);
     }
 	
-    if(shouldPreload && (self.images.count > _prefetchedNum)) {
+    if (shouldPreload) {
         if(idx != 0) {
-            [self.images replaceObjectAtIndex:idx withObject:[NSNull null]];
+			if (self.images.count > _prefetchedNum) {
+				[self.images replaceObjectAtIndex:idx withObject:[NSNull null]];
+			}
         }
+		
         NSUInteger nextReadIdx = (idx + _prefetchedNum);
         for(NSUInteger i=idx+1; i<=nextReadIdx; i++) {
             NSUInteger _idx = i%self.images.count;
