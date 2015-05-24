@@ -202,20 +202,23 @@ static NSUInteger _prefetchedNum = 10;
     return self;
 }
 
+
+
 - (UIImage*)getFrameWithIndex:(NSUInteger)idx
+				   preload:(BOOL)shouldPreload
 {
-    //    if([self.images[idx] isKindOfClass:[NSNull class]])
-    //        return nil;
     UIImage* frame = nil;
     @synchronized(self.images) {
         frame = self.images[idx];
     }
+	
 	if([frame isKindOfClass:[NSNull class]]) {
         CGImageRef image = CGImageSourceCreateImageAtIndex(_imageSourceRef, idx, NULL);
         frame = [UIImage imageWithCGImage:image scale:_scale orientation:UIImageOrientationUp];
         CFRelease(image);
     }
-    if(self.images.count > _prefetchedNum) {
+	
+    if(shouldPreload && (self.images.count > _prefetchedNum)) {
         if(idx != 0) {
             [self.images replaceObjectAtIndex:idx withObject:[NSNull null]];
         }
@@ -233,6 +236,7 @@ static NSUInteger _prefetchedNum = 10;
             }
         }
     }
+	
     return frame;
 }
 

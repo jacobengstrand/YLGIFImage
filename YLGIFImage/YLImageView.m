@@ -193,9 +193,10 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
             self.currentFrameIndex = 0;
         }
         self.currentFrameIndex = MIN(self.currentFrameIndex, [self.animatedImage.images count] - 1);
-        self.currentFrame = [self.animatedImage getFrameWithIndex:self.currentFrameIndex];
-        [self.layer setNeedsDisplay];
-    }
+        self.currentFrame = [self.animatedImage getFrameWithIndex:self.currentFrameIndex
+														  preload:YES];
+		[self.layer setNeedsDisplay];
+	}
 }
 
 - (void)displayLayer:(CALayer *)layer

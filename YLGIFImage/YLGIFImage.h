@@ -31,6 +31,10 @@
  */
 @property (nonatomic, readonly) NSUInteger loopCount;
 
-- (UIImage*)getFrameWithIndex:(NSUInteger)idx;
+/**
+ Returns the frame with index idx and preloads a few more frames on a background thread.
+ */
+- (UIImage*)getFrameWithIndex:(NSUInteger)idx
+					  preload:(BOOL)shouldPreload;
 
 @end
