@@ -186,19 +186,16 @@ static NSUInteger _prefetchedNum = 10;
         self.frameDurations[i] = frameDuration;
         self.totalDuration += frameDuration;
     }
-    //CFTimeInterval start = CFAbsoluteTimeGetCurrent();
-    // Load first frame
-    NSUInteger num = MIN(_prefetchedNum, numberOfFrames);
-    for (NSUInteger i=0; i<num; i++) {
-        CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, i, NULL);
-        [self.images replaceObjectAtIndex:i withObject:[UIImage imageWithCGImage:image scale:scale orientation:UIImageOrientationUp]];
-        CFRelease(image);
-    }
+
+    // Load first frame only
+	CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
+	[self.images replaceObjectAtIndex:0 withObject:[UIImage imageWithCGImage:image scale:scale orientation:UIImageOrientationUp]];
+	CFRelease(image);
+	
     _imageSourceRef = imageSource;
     CFRetain(_imageSourceRef);
     CFRelease(imageSource);
-    //});
-    
+	
     _scale = scale;
     readFrameQueue = dispatch_queue_create("com.ronnie.gifreadframe", DISPATCH_QUEUE_SERIAL);
     
