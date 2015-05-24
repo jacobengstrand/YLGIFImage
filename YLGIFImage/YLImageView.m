@@ -20,6 +20,8 @@
 @property (nonatomic) NSUInteger currentFrameIndex;
 @property (nonatomic, strong) UIImage* currentFrame;
 @property (nonatomic) NSUInteger loopCountdown;
+@property (nonatomic) BOOL wantsToAnimate;
+@property (nonatomic) BOOL shouldAnimate;
 
 @end
 
@@ -28,35 +30,46 @@
 const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
 
 @synthesize runLoopMode = _runLoopMode;
-@synthesize displayLink = _displayLink;
 
-- (id)init
+
+
+- (void)setUpNotifications
 {
-    self = [super init];
-    if (self) {
-        self.currentFrameIndex = 0;
-    }
-    return self;
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(handleUIApplicationDidBecomeActiveNotification)
+												 name:UIApplicationDidBecomeActiveNotification
+											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(handleUIApplicationWillResignActiveNotification)
+												 name:UIApplicationWillResignActiveNotification
+											   object:nil];
 }
 
-- (CADisplayLink *)displayLink
+
+
+- (void)dealloc
 {
-    if (self.superview) {
-        if (!_displayLink && self.animatedImage) {
-            _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(changeKeyframe:)];
-            [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:self.runLoopMode];
-        }
-    } else {
-        [_displayLink invalidate];
-        _displayLink = nil;
-    }
-    return _displayLink;
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+
+
+- (void)setupDisplayLink
+{
+	if (!_displayLink && self.animatedImage) {
+		_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(changeKeyframe:)];
+		[_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:self.runLoopMode];
+	}
+}
+
+
 
 - (NSString *)runLoopMode
 {
     return _runLoopMode ?: NSRunLoopCommonModes;
 }
+
+
 
 - (void)setRunLoopMode:(NSString *)runLoopMode
 {
@@ -64,13 +77,13 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
         [self stopAnimating];
         
         NSRunLoop *runloop = [NSRunLoop mainRunLoop];
-        [self.displayLink removeFromRunLoop:runloop forMode:_runLoopMode];
-        [self.displayLink addToRunLoop:runloop forMode:runLoopMode];
+        [_displayLink removeFromRunLoop:runloop forMode:_runLoopMode];
+        [_displayLink addToRunLoop:runloop forMode:runLoopMode];
         
         _runLoopMode = runLoopMode;
-        
-        [self startAnimating];
-    }
+		
+		[self startAnimatingIfAppropriate];
+	}
 }
 
 - (void)setImage:(UIImage *)image
@@ -84,7 +97,10 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
     self.currentFrameIndex = 0;
     self.loopCountdown = 0;
     self.accumulator = 0;
-    
+	
+	[self setUpNotifications];
+	_shouldAnimate = ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive);
+
     if ([image isKindOfClass:[YLGIFImage class]] && image.images) {
 		if (kCFCoreFoundationVersionNumber >= kGMCFCoreFoundationVersionNumber_iPhoneOS_8_0) {
 			if ([image.images[0] isKindOfClass:[UIImage class]])
@@ -99,7 +115,6 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
         self.currentFrame = nil;
         self.animatedImage = (YLGIFImage *)image;
         self.loopCountdown = self.animatedImage.loopCount ?: NSUIntegerMax;
-        [self startAnimating];
     } else {
         self.animatedImage = nil;
         [super setImage:image];
@@ -117,7 +132,7 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
 
 - (BOOL)isAnimating
 {
-    return [super isAnimating] || (self.displayLink && !self.displayLink.isPaused);
+    return [super isAnimating] || (_displayLink && !_displayLink.isPaused);
 }
 
 - (void)stopAnimating
@@ -126,27 +141,40 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
         [super stopAnimating];
         return;
     }
-    
-    self.loopCountdown = 0;
-    
-    self.displayLink.paused = YES;
+ 
+	_wantsToAnimate = NO;
+    _displayLink.paused = YES;
 }
+
+
+
+- (void)startAnimatingIfAppropriate
+{
+	if (!self.animatedImage) {
+		[super startAnimating];
+		return;
+	}
+	
+	if (self.isAnimating) {
+		return;
+	}
+	
+	if (_wantsToAnimate && _shouldAnimate) {
+		[self setupDisplayLink];
+		self.loopCountdown = self.animatedImage.loopCount ?: NSUIntegerMax;
+		self.displayLink.paused = NO;
+	}
+}
+
+
 
 - (void)startAnimating
 {
-    if (!self.animatedImage) {
-        [super startAnimating];
-        return;
-    }
-    
-    if (self.isAnimating) {
-        return;
-    }
-    
-    self.loopCountdown = self.animatedImage.loopCount ?: NSUIntegerMax;
-    
-    self.displayLink.paused = NO;
+	_wantsToAnimate = YES;
+	[self startAnimatingIfAppropriate];
 }
+
+
 
 - (void)changeKeyframe:(CADisplayLink *)displayLink
 {
@@ -184,7 +212,7 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
 {
     [super didMoveToWindow];
     if (self.window) {
-        [self startAnimating];
+		[self startAnimatingIfAppropriate];
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!self.window) {
@@ -194,19 +222,23 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
     }
 }
 
+
+
 - (void)didMoveToSuperview
 {
     [super didMoveToSuperview];
-    if (self.superview) {
-        //Has a superview, make sure it has a displayLink
-        [self displayLink];
-    } else {
-        //Doesn't have superview, let's check later if we need to remove the displayLink
+    if (! self.superview) {
+		//Doesn't have superview, let's check later if we need to remove the displayLink
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self displayLink];
-        });
+			if (self.superview != nil) {
+				[_displayLink invalidate];
+				_displayLink = nil;
+			}
+		});
     }
 }
+
+
 
 - (void)setHighlighted:(BOOL)highlighted
 {
@@ -225,5 +257,25 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
     return self.image.size;
 }
 
+
+
+
+- (void)handleUIApplicationDidBecomeActiveNotification
+{
+	_shouldAnimate = YES;
+	[self startAnimatingIfAppropriate];
+}
+
+
+
+- (void)handleUIApplicationWillResignActiveNotification
+{
+	_shouldAnimate = NO;
+	_displayLink.paused = YES;
+}
+
+
+
 @end
+
 
