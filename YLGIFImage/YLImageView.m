@@ -43,6 +43,11 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
 											 selector:@selector(handleUIApplicationWillResignActiveNotification)
 												 name:UIApplicationWillResignActiveNotification
 											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(handleUIApplicationDidReceiveMemoryWarningNotification)
+												 name:UIApplicationDidReceiveMemoryWarningNotification
+											   object:nil];
+	
 }
 
 
@@ -273,6 +278,17 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
 {
 	_shouldAnimate = NO;
 	_displayLink.paused = YES;
+}
+
+
+
+- (void)handleUIApplicationDidReceiveMemoryWarningNotification
+{
+	if (_animatedImage != nil) {
+		if (! self.isAnimating) {
+			[_animatedImage dropPrefetchedFrames];
+		}
+	}
 }
 
 

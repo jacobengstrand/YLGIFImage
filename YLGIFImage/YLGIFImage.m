@@ -243,6 +243,19 @@ static NSUInteger _prefetchedNum = 10;
     return frame;
 }
 
+
+- (void)dropPrefetchedFrames
+{
+	NSUInteger c = self.images.count;
+	for (NSUInteger i = 1; i < c; i++) {
+		if (! [self.images[i] isKindOfClass:[NSNull class]]) {
+			[self.images replaceObjectAtIndex:i
+								   withObject:[NSNull null]];
+		}
+	}
+}
+
+
 #pragma mark - Compatibility methods
 
 - (CGSize)size

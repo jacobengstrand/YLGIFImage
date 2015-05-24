@@ -37,4 +37,8 @@
 - (UIImage*)getFrameWithIndex:(NSUInteger)idx
 					  preload:(BOOL)shouldPreload;
 
+/**
+ Releases all prefeteched frames.
+ */
+- (void)dropPrefetchedFrames;
 @end
