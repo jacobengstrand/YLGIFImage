@@ -99,17 +99,19 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
     
     [self stopAnimating];
     
-    self.currentFrameIndex = 0;
-    self.loopCountdown = 0;
-    self.accumulator = 0;
+    _currentFrameIndex = 0;
+    _loopCountdown = 0;
+    _accumulator = 0;
 	
 	[self setUpNotifications];
 	_shouldAnimate = ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive);
 
     if ([image isKindOfClass:[YLGIFImage class]] && image.images) {
 		if (kCFCoreFoundationVersionNumber >= kGMCFCoreFoundationVersionNumber_iPhoneOS_8_0) {
-			if ([image.images[0] isKindOfClass:[UIImage class]])
-				[super setImage:image.images[0]];
+			UIImage *firstFrame = [(YLGIFImage*)image getFrameWithIndex:0
+																preload:NO];
+			if ([firstFrame isKindOfClass:[UIImage class]])
+				[super setImage:firstFrame];
 			else
 				[super setImage:nil];
 		}
@@ -119,7 +121,7 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
 		}
         self.currentFrame = nil;
         self.animatedImage = (YLGIFImage *)image;
-        self.loopCountdown = self.animatedImage.loopCount ?: NSUIntegerMax;
+        _loopCountdown = self.animatedImage.loopCount ?: NSUIntegerMax;
     } else {
         self.animatedImage = nil;
         [super setImage:image];
@@ -166,7 +168,7 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
 	
 	if (_wantsToAnimate && _shouldAnimate) {
 		[self setupDisplayLink];
-		self.loopCountdown = self.animatedImage.loopCount ?: NSUIntegerMax;
+		_loopCountdown = self.animatedImage.loopCount ?: NSUIntegerMax;
 		self.displayLink.paused = NO;
 	}
 }
@@ -183,22 +185,23 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
 
 - (void)changeKeyframe:(CADisplayLink *)displayLink
 {
-    if (self.currentFrameIndex >= [self.animatedImage.images count]) {
+    if (_currentFrameIndex >= [self.animatedImage.images count]) {
         return;
     }
-    self.accumulator += fmin(displayLink.duration, kMaxTimeStep);
-    
-    while (self.accumulator >= self.animatedImage.frameDurations[self.currentFrameIndex]) {
-        self.accumulator -= self.animatedImage.frameDurations[self.currentFrameIndex];
-        if (++self.currentFrameIndex >= [self.animatedImage.images count]) {
-            if (--self.loopCountdown == 0) {
+    _accumulator += fmin(displayLink.duration, kMaxTimeStep);
+	
+	NSTimeInterval duration = self.animatedImage.frameDurations[_currentFrameIndex];
+    while (_accumulator >= duration) {
+        _accumulator -= duration;
+		if (++_currentFrameIndex >= [self.animatedImage.images count]) {
+            if (--_loopCountdown == 0) {
                 [self stopAnimating];
                 return;
             }
-            self.currentFrameIndex = 0;
+            _currentFrameIndex = 0;
         }
-        self.currentFrameIndex = MIN(self.currentFrameIndex, [self.animatedImage.images count] - 1);
-        self.currentFrame = [self.animatedImage getFrameWithIndex:self.currentFrameIndex
+        _currentFrameIndex = MIN(_currentFrameIndex, [self.animatedImage.images count] - 1);
+        self.currentFrame = [self.animatedImage getFrameWithIndex:_currentFrameIndex
 														  preload:YES];
 		[self.layer setNeedsDisplay];
 	}
@@ -209,8 +212,8 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
     if (!self.animatedImage || [self.animatedImage.images count] == 0) {
         return;
     }
-    //NSLog(@"display index: %luu", (unsigned long)self.currentFrameIndex);
-    if(self.currentFrame && ![self.currentFrame isKindOfClass:[NSNull class]])
+
+	if(self.currentFrame && ![self.currentFrame isKindOfClass:[NSNull class]])
         layer.contents = (__bridge id)([self.currentFrame CGImage]);
 }
 

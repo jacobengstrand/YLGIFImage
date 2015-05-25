@@ -77,6 +77,7 @@ static NSUInteger _prefetchedNum = 10;
     dispatch_queue_t readFrameQueue;
     CGImageSourceRef _imageSourceRef;
     CGFloat _scale;
+	BOOL _doneSettingUp;
 }
 
 @synthesize images;
@@ -178,28 +179,52 @@ static NSUInteger _prefetchedNum = 10;
     self.frameDurations = (NSTimeInterval *)malloc(numberOfFrames  * sizeof(NSTimeInterval));
     self.loopCount = [gifProperties[(NSString *)kCGImagePropertyGIFLoopCount] unsignedIntegerValue];
     self.images = [NSMutableArray arrayWithCapacity:numberOfFrames];
-    
-    NSNull *aNull = [NSNull null];
-    for (NSUInteger i = 0; i < numberOfFrames; ++i) {
-        [self.images addObject:aNull];
-        NSTimeInterval frameDuration = CGImageSourceGetGifFrameDelay(imageSource, i);
-        self.frameDurations[i] = frameDuration;
-        self.totalDuration += frameDuration;
-    }
+	
+	_scale = scale;
+	readFrameQueue = dispatch_queue_create("com.ronnie.gifreadframe", DISPATCH_QUEUE_SERIAL);
 
-    // Load first frame only
-	CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-	[self.images replaceObjectAtIndex:0 withObject:[UIImage imageWithCGImage:image scale:scale orientation:UIImageOrientationUp]];
-	CFRelease(image);
+	dispatch_async(readFrameQueue, ^{
+		@synchronized(self.images) {
+			NSNull *aNull = [NSNull null];
+			NSTimeInterval frameDuration = CGImageSourceGetGifFrameDelay(imageSource, 0);
+			for (NSUInteger i = 0; i < numberOfFrames; ++i) {
+				[self.images addObject:aNull];
+				self.frameDurations[i] = frameDuration; // Assume that all frames have the same duration.
+			}
+			_totalDuration = frameDuration * numberOfFrames;
+			
+			// Load first frame only
+			CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
+			[self.images replaceObjectAtIndex:0 withObject:[UIImage imageWithCGImage:image scale:scale orientation:UIImageOrientationUp]];
+			CFRelease(image);
+			
+			CFRelease(imageSource);
+		}
+		_doneSettingUp = YES;
+
+		// Figure out the actual diration.
+		NSTimeInterval tot = 0;
+		for (NSUInteger i = 0; i < numberOfFrames; ++i) {
+			NSTimeInterval frameDuration = CGImageSourceGetGifFrameDelay(imageSource, i);
+			self.frameDurations[i] = frameDuration;
+			tot += frameDuration;
+		}
+		_totalDuration = tot;
+	});
 	
     _imageSourceRef = imageSource;
     CFRetain(_imageSourceRef);
-    CFRelease(imageSource);
 	
-    _scale = scale;
-    readFrameQueue = dispatch_queue_create("com.ronnie.gifreadframe", DISPATCH_QUEUE_SERIAL);
-    
     return self;
+}
+
+
+- (void) waitForInitialization
+{
+	while (! _doneSettingUp) {
+		// Need to wait for initialization.
+		[NSThread sleepForTimeInterval:0.0001];
+	}
 }
 
 
@@ -208,10 +233,13 @@ static NSUInteger _prefetchedNum = 10;
 				   preload:(BOOL)shouldPreload
 {
     UIImage* frame = nil;
-    @synchronized(self.images) {
-        frame = self.images[idx];
-    }
 	
+	[self waitForInitialization];
+
+	@synchronized(self.images) {
+		frame = self.images[idx];
+	}
+
 	if([frame isKindOfClass:[NSNull class]]) {
         CGImageRef image = CGImageSourceCreateImageAtIndex(_imageSourceRef, idx, NULL);
         frame = [UIImage imageWithCGImage:image scale:_scale orientation:UIImageOrientationUp];
@@ -221,7 +249,9 @@ static NSUInteger _prefetchedNum = 10;
     if (shouldPreload) {
         if(idx != 0) {
 			if (self.images.count > _prefetchedNum) {
-				[self.images replaceObjectAtIndex:idx withObject:[NSNull null]];
+				@synchronized(self.images) {
+					[self.images replaceObjectAtIndex:idx withObject:[NSNull null]];
+				}
 			}
         }
 		
@@ -246,11 +276,15 @@ static NSUInteger _prefetchedNum = 10;
 
 - (void)dropPrefetchedFrames
 {
+	[self waitForInitialization];
+
 	NSUInteger c = self.images.count;
-	for (NSUInteger i = 1; i < c; i++) {
-		if (! [self.images[i] isKindOfClass:[NSNull class]]) {
-			[self.images replaceObjectAtIndex:i
-								   withObject:[NSNull null]];
+	@synchronized(self.images) {
+		for (NSUInteger i = 1; i < c; i++) {
+			if (! [self.images[i] isKindOfClass:[NSNull class]]) {
+				[self.images replaceObjectAtIndex:i
+									   withObject:[NSNull null]];
+			}
 		}
 	}
 }
@@ -260,6 +294,8 @@ static NSUInteger _prefetchedNum = 10;
 
 - (CGSize)size
 {
+	[self waitForInitialization];
+
     if (self.images.count) {
         return [[self.images objectAtIndex:0] size];
     }
@@ -268,6 +304,8 @@ static NSUInteger _prefetchedNum = 10;
 
 - (CGImageRef)CGImage
 {
+	[self waitForInitialization];
+
     if (self.images.count) {
         return [[self.images objectAtIndex:0] CGImage];
     } else {
@@ -277,6 +315,8 @@ static NSUInteger _prefetchedNum = 10;
 
 - (UIImageOrientation)imageOrientation
 {
+	[self waitForInitialization];
+
     if (self.images.count) {
         return [[self.images objectAtIndex:0] imageOrientation];
     } else {
@@ -286,7 +326,9 @@ static NSUInteger _prefetchedNum = 10;
 
 - (CGFloat)scale
 {
-    if (self.images.count) {
+	[self waitForInitialization];
+	
+	if (self.images.count) {
         return [(UIImage *)[self.images objectAtIndex:0] scale];
     } else {
         return [super scale];
@@ -295,6 +337,8 @@ static NSUInteger _prefetchedNum = 10;
 
 - (NSTimeInterval)duration
 {
+	[self waitForInitialization];
+
     return self.images ? self.totalDuration : [super duration];
 }
 
