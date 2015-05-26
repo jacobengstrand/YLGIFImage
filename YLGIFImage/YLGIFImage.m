@@ -301,10 +301,7 @@ inline static BOOL isRetinaFilePath(NSString *path)
 	NSUInteger c = self.images.count;
 	@synchronized(self.images) {
 		for (NSUInteger i = 1; i < c; i++) {
-			if (! [self.images[i] isKindOfClass:[NSNull class]]) {
-				[self.images replaceObjectAtIndex:i
-									   withObject:[NSNull null]];
-			}
+			self.images[i] = [NSNull null];
 		}
 	}
 }

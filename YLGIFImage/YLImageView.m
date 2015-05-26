@@ -151,6 +151,7 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
  
 	_wantsToAnimate = NO;
     _displayLink.paused = YES;
+	[_animatedImage dropPrefetchedFrames];
 }
 
 
@@ -281,6 +282,7 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
 {
 	_shouldAnimate = NO;
 	_displayLink.paused = YES;
+	[_animatedImage dropPrefetchedFrames];
 }
 
 
