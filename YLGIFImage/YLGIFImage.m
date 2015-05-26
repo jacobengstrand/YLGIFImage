@@ -67,10 +67,9 @@ inline static BOOL isRetinaFilePath(NSString *path)
 @property (nonatomic, readwrite) NSTimeInterval totalDuration;
 @property (nonatomic, readwrite) NSUInteger loopCount;
 @property (nonatomic, readwrite) CGImageSourceRef incrementalSource;
+@property (nonatomic, readwrite) NSUInteger prefetchedNum;
 
 @end
-
-static NSUInteger _prefetchedNum = 10;
 
 @implementation YLGIFImage
 {
@@ -168,7 +167,9 @@ static NSUInteger _prefetchedNum = 10;
     if (!imageSource || !self) {
         return nil;
     }
-    
+	
+	_prefetchedNum = 2;
+	
     CFRetain(imageSource);
     
     NSUInteger numberOfFrames = CGImageSourceGetCount(imageSource);
@@ -196,12 +197,31 @@ static NSUInteger _prefetchedNum = 10;
 			// Load first frame only
 			CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
 			[self.images replaceObjectAtIndex:0 withObject:[UIImage imageWithCGImage:image scale:scale orientation:UIImageOrientationUp]];
-			CFRelease(image);
 			
+			// Find out how many frames we can prefetch and keep in RAM.
+			NSUInteger frameDataSize = [YLGIFImage sizeOfImageRef:image];
+			NSLog(@"dataSize %d: %lu", 0, frameDataSize);
+			NSLog(@"frames %lu", numberOfFrames);
+			NSUInteger totalSize = numberOfFrames * frameDataSize;
+			NSLog(@"totalSize %lu", totalSize);
+			NSUInteger maxPrefetchedNum = (NSUInteger)floor(2000000.0 / frameDataSize); // Prefetched frames should use max 2 MB RAM in total.
+			if (maxPrefetchedNum < numberOfFrames) {
+				// If we can't keep all frames in RAM, the CPU will have to decode each frame over and over anyway,
+				// so lets not waste RAM by keeping lots of prefetched frames in memory.
+				_prefetchedNum = 2;
+			}
+			else {
+				// All frames will fit in RAM, so lets not waste CPU decoding them over and over. Prefetch all.
+				_prefetchedNum = numberOfFrames;
+			}
+			NSLog(@"_prefetchedNum %lu", _prefetchedNum);
+			
+			CFRelease(image);
 			CFRelease(imageSource);
 		}
 		_doneSettingUp = YES;
 
+		
 		// Figure out the actual diration.
 		NSTimeInterval tot = 0;
 		for (NSUInteger i = 0; i < numberOfFrames; ++i) {
@@ -341,6 +361,21 @@ static NSUInteger _prefetchedNum = 10;
 
     return self.images ? self.totalDuration : [super duration];
 }
+
+
+
++ (NSUInteger)sizeOfImageRef:(CGImageRef)image
+{
+	size_t height = CGImageGetHeight(image);
+	NSUInteger bytesPerRow = CGImageGetBytesPerRow(image);
+	if (bytesPerRow % 16)
+		bytesPerRow = ((bytesPerRow / 16) + 1) * 16;
+	NSUInteger dataSize = height * bytesPerRow;
+	
+	return dataSize;
+}
+
+
 
 - (void)dealloc {
     if(_imageSourceRef) {
