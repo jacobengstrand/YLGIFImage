@@ -20,6 +20,8 @@
 		165287C21B113C1200ED3E29 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 165287C11B113C1200ED3E29 /* Foundation.framework */; };
 		165287CB1B113CEF00ED3E29 /* YLGIFImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 165287C81B113CEF00ED3E29 /* YLGIFImage.m */; };
 		165287CC1B113CEF00ED3E29 /* YLImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 165287CA1B113CEF00ED3E29 /* YLImageView.m */; };
+		166326251B141DCF0096D9DB /* gum.gif in Resources */ = {isa = PBXBuildFile; fileRef = 166326231B141DCF0096D9DB /* gum.gif */; };
+		166326261B141DCF0096D9DB /* monday.gif in Resources */ = {isa = PBXBuildFile; fileRef = 166326241B141DCF0096D9DB /* monday.gif */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +56,8 @@
 		165287C81B113CEF00ED3E29 /* YLGIFImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YLGIFImage.m; path = ../../YLGIFImage/YLGIFImage.m; sourceTree = "<group>"; };
 		165287C91B113CEF00ED3E29 /* YLImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YLImageView.h; path = ../../YLGIFImage/YLImageView.h; sourceTree = "<group>"; };
 		165287CA1B113CEF00ED3E29 /* YLImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YLImageView.m; path = ../../YLGIFImage/YLImageView.m; sourceTree = "<group>"; };
+		166326231B141DCF0096D9DB /* gum.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = gum.gif; sourceTree = SOURCE_ROOT; };
+		166326241B141DCF0096D9DB /* monday.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = monday.gif; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +111,8 @@
 				1652879F1B11388900ED3E29 /* Images.xcassets */,
 				165287A11B11388900ED3E29 /* LaunchScreen.xib */,
 				165287B81B11390E00ED3E29 /* joy.gif */,
+				166326231B141DCF0096D9DB /* gum.gif */,
+				166326241B141DCF0096D9DB /* monday.gif */,
 				165287BD1B113BA600ED3E29 /* CoreGraphics.framework */,
 				165287C11B113C1200ED3E29 /* Foundation.framework */,
 				165287BF1B113BF700ED3E29 /* UIKit.framework */,
@@ -235,6 +241,8 @@
 				1652879E1B11388900ED3E29 /* Main.storyboard in Resources */,
 				165287B91B11390E00ED3E29 /* joy.gif in Resources */,
 				165287A31B11388900ED3E29 /* LaunchScreen.xib in Resources */,
+				166326251B141DCF0096D9DB /* gum.gif in Resources */,
+				166326261B141DCF0096D9DB /* monday.gif in Resources */,
 				165287A01B11388900ED3E29 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -462,6 +470,7 @@
 				165287B41B11388900ED3E29 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		165287B51B11388900ED3E29 /* Build configuration list for PBXNativeTarget "GMGIF DemoTests" */ = {
 			isa = XCConfigurationList;
@@ -470,6 +479,7 @@
 				165287B71B11388900ED3E29 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

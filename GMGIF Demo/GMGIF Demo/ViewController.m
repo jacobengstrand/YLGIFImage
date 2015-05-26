@@ -15,9 +15,11 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	
+//	YLGIFImage *img = (YLGIFImage*)[YLGIFImage imageNamed:@"monday.gif"];
+//	YLGIFImage *img = (YLGIFImage*)[YLGIFImage imageNamed:@"gum.gif"];
 	YLGIFImage *img = (YLGIFImage*)[YLGIFImage imageNamed:@"joy.gif"];
 	[_imageView setImage:img];
-
+	
 	[self updateButton];
 }
 
