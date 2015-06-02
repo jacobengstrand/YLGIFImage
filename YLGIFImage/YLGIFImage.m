@@ -147,6 +147,7 @@ inline static BOOL isRetinaFilePath(NSString *path)
     if (CGImageSourceContainsAnimatedGif(imageSource)) {
         self = [self initWithCGImageSource:imageSource scale:scale];
     } else {
+		_doneSettingUp = YES;
         if (scale == 1.0f) {
             self = [super initWithData:data];
         } else {
@@ -220,9 +221,8 @@ inline static BOOL isRetinaFilePath(NSString *path)
 			CFRelease(imageSource);
 		}
 		_doneSettingUp = YES;
-
 		
-		// Figure out the actual diration.
+		// Figure out the actual duration.
 		NSTimeInterval tot = 0;
 		for (NSUInteger i = 0; i < numberOfFrames; ++i) {
 			NSTimeInterval frameDuration = CGImageSourceGetGifFrameDelay(imageSource, i);
