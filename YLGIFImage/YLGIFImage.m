@@ -6,16 +6,13 @@
 //  Copyright (c) 2014年 Yong Li. All rights reserved.
 //
 
+
+
 #import "YLGIFImage.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <ImageIO/ImageIO.h>
 
 
-//Define FLT_EPSILON because, reasons.
-//Actually, I don't know why but it seems under certain circumstances it is not defined
-#ifndef FLT_EPSILON
-#define FLT_EPSILON __FLT_EPSILON__
-#endif
 
 inline static NSTimeInterval CGImageSourceGetGifFrameDelay(CGImageSourceRef imageSource, NSUInteger index)
 {
@@ -49,16 +46,22 @@ inline static NSTimeInterval CGImageSourceGetGifFrameDelay(CGImageSourceRef imag
     return frameDuration;
 }
 
+
+
 inline static BOOL CGImageSourceContainsAnimatedGif(CGImageSourceRef imageSource)
 {
     return imageSource && UTTypeConformsTo(CGImageSourceGetType(imageSource), kUTTypeGIF) && CGImageSourceGetCount(imageSource) > 1;
 }
+
+
 
 inline static BOOL isRetinaFilePath(NSString *path)
 {
     NSRange retinaSuffixRange = [[path lastPathComponent] rangeOfString:@"@2x" options:NSCaseInsensitiveSearch];
     return retinaSuffixRange.length && retinaSuffixRange.location != NSNotFound;
 }
+
+
 
 @interface YLGIFImage ()
 
@@ -71,17 +74,23 @@ inline static BOOL isRetinaFilePath(NSString *path)
 
 @end
 
+
+
 @implementation YLGIFImage
 {
     dispatch_queue_t readFrameQueue;
     CGImageSourceRef _imageSourceRef;
     CGFloat _scale;
-	BOOL _doneSettingUp;
+	dispatch_semaphore_t _setupSemaphore;
 }
 
 @synthesize images;
 
+
+
 #pragma mark - Class Methods
+
+
 
 + (id)imageNamed:(NSString *)name
 {
@@ -90,20 +99,26 @@ inline static BOOL isRetinaFilePath(NSString *path)
     return ([[NSFileManager defaultManager] fileExistsAtPath:path]) ? [self imageWithContentsOfFile:path] : nil;
 }
 
+
+
 + (id)imageWithContentsOfFile:(NSString *)path
 {
     return [self imageWithData:[NSData dataWithContentsOfFile:path]
-                         scale:isRetinaFilePath(path) ? 2.0f : 1.0f];
+                         scale:isRetinaFilePath(path) ? 2.0 : 1.0];
 }
+
+
 
 + (id)imageWithData:(NSData *)data
 {
-    return [self imageWithData:data scale:1.0f];
+    return [self imageWithData:data scale:1.0];
 }
+
+
 
 + (id)imageWithData:(NSData *)data scale:(CGFloat)scale
 {
-    if (!data) {
+    if (! data) {
         return nil;
     }
     
@@ -112,7 +127,8 @@ inline static BOOL isRetinaFilePath(NSString *path)
     
     if (CGImageSourceContainsAnimatedGif(imageSource)) {
         image = [[self alloc] initWithCGImageSource:imageSource scale:scale];
-    } else {
+    }
+	else {
         image = [super imageWithData:data scale:scale];
     }
     
@@ -123,34 +139,43 @@ inline static BOOL isRetinaFilePath(NSString *path)
     return image;
 }
 
+
+
 #pragma mark - Initialization methods
+
+
 
 - (id)initWithContentsOfFile:(NSString *)path
 {
     return [self initWithData:[NSData dataWithContentsOfFile:path]
-                        scale:isRetinaFilePath(path) ? 2.0f : 1.0f];
+                        scale:isRetinaFilePath(path) ? 2.0 : 1.0];
 }
+
+
 
 - (id)initWithData:(NSData *)data
 {
-    return [self initWithData:data scale:1.0f];
+    return [self initWithData:data scale:1.0];
 }
+
+
 
 - (id)initWithData:(NSData *)data scale:(CGFloat)scale
 {
-    if (!data) {
+    if (! data) {
         return nil;
     }
-    
+	
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)(data), NULL);
-    
     if (CGImageSourceContainsAnimatedGif(imageSource)) {
-        self = [self initWithCGImageSource:imageSource scale:scale];
-    } else {
-		_doneSettingUp = YES;
-        if (scale == 1.0f) {
+        self = [self initWithCGImageSource:imageSource
+									 scale:scale];
+    }
+	else {
+        if (scale == 1.0) {
             self = [super initWithData:data];
-        } else {
+        }
+		else {
             self = [super initWithData:data scale:scale];
         }
     }
@@ -162,14 +187,21 @@ inline static BOOL isRetinaFilePath(NSString *path)
     return self;
 }
 
-- (id)initWithCGImageSource:(CGImageSourceRef)imageSource scale:(CGFloat)scale
+
+
+- (id)initWithCGImageSource:(CGImageSourceRef)imageSource
+					  scale:(CGFloat)scale
 {
     self = [super init];
-    if (!imageSource || !self) {
+    if (! imageSource || ! self) {
         return nil;
     }
 	
-	_prefetchedNum = 2;
+	// To save time we defer a lot of the setup to an async thread. Semaphore to keep track.
+	_setupSemaphore = dispatch_semaphore_create(1);
+	dispatch_semaphore_wait(_setupSemaphore, DISPATCH_TIME_FOREVER);
+
+	_prefetchedNum = 2; // Enough.
 	
     CFRetain(imageSource);
     
@@ -183,13 +215,13 @@ inline static BOOL isRetinaFilePath(NSString *path)
     self.images = [NSMutableArray arrayWithCapacity:numberOfFrames];
 	
 	_scale = scale;
-	readFrameQueue = dispatch_queue_create("com.ronnie.gifreadframe", DISPATCH_QUEUE_SERIAL);
-
+	readFrameQueue = dispatch_queue_create("YLGIF.reader", DISPATCH_QUEUE_SERIAL);
+	
 	dispatch_async(readFrameQueue, ^{
 		@synchronized(self.images) {
 			NSNull *aNull = [NSNull null];
 			NSTimeInterval frameDuration = CGImageSourceGetGifFrameDelay(imageSource, 0);
-			for (NSUInteger i = 0; i < numberOfFrames; ++i) {
+			for (NSUInteger i = 0; i < numberOfFrames; i ++) {
 				[self.images addObject:aNull];
 				self.frameDurations[i] = frameDuration; // Assume that all frames have the same duration.
 			}
@@ -197,14 +229,12 @@ inline static BOOL isRetinaFilePath(NSString *path)
 			
 			// Load first frame only
 			CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-			[self.images replaceObjectAtIndex:0 withObject:[UIImage imageWithCGImage:image scale:scale orientation:UIImageOrientationUp]];
+			UIImage *firstFrame = [UIImage imageWithCGImage:image scale:scale orientation:UIImageOrientationUp];
+			[self.images replaceObjectAtIndex:0 withObject:firstFrame];
 			
 			// Find out how many frames we can prefetch and keep in RAM.
 			NSUInteger frameDataSize = [YLGIFImage sizeOfImageRef:image];
-			NSLog(@"dataSize %d: %lu", 0, frameDataSize);
-			NSLog(@"frames %lu", numberOfFrames);
 			NSUInteger totalSize = numberOfFrames * frameDataSize;
-			NSLog(@"totalSize %lu", totalSize);
 			NSUInteger maxPrefetchedNum = (NSUInteger)floor(2000000.0 / frameDataSize); // Prefetched frames should use max 2 MB RAM in total.
 			if (maxPrefetchedNum < numberOfFrames) {
 				// If we can't keep all frames in RAM, the CPU will have to decode each frame over and over anyway,
@@ -215,13 +245,12 @@ inline static BOOL isRetinaFilePath(NSString *path)
 				// All frames will fit in RAM, so lets not waste CPU decoding them over and over. Prefetch all.
 				_prefetchedNum = numberOfFrames;
 			}
-			NSLog(@"_prefetchedNum %lu", _prefetchedNum);
 			
 			CFRelease(image);
 			CFRelease(imageSource);
 		}
-		_doneSettingUp = YES;
-		
+		dispatch_semaphore_signal(_setupSemaphore);
+
 		// Figure out the actual duration.
 		NSTimeInterval tot = 0;
 		for (NSUInteger i = 0; i < numberOfFrames; ++i) {
@@ -239,18 +268,19 @@ inline static BOOL isRetinaFilePath(NSString *path)
 }
 
 
+
 - (void) waitForInitialization
 {
-	while (! _doneSettingUp) {
-		// Need to wait for initialization.
-		[NSThread sleepForTimeInterval:0.0001];
+	if (_setupSemaphore != nil) {
+		dispatch_semaphore_wait(_setupSemaphore, DISPATCH_TIME_FOREVER);
+		dispatch_semaphore_signal(_setupSemaphore);
 	}
 }
 
 
 
 - (UIImage*)getFrameWithIndex:(NSUInteger)idx
-				   preload:(BOOL)shouldPreload
+					  preload:(BOOL)shouldPreload
 {
     UIImage* frame = nil;
 	
@@ -258,33 +288,39 @@ inline static BOOL isRetinaFilePath(NSString *path)
 
 	@synchronized(self.images) {
 		frame = self.images[idx];
+		if ([frame isKindOfClass:[NSNull class]]) {
+			CGImageRef image = CGImageSourceCreateImageAtIndex(_imageSourceRef, idx, NULL);
+			frame = [UIImage imageWithCGImage:image
+										scale:_scale
+								  orientation:UIImageOrientationUp];
+			CFRelease(image);
+		}
 	}
-
-	if([frame isKindOfClass:[NSNull class]]) {
-        CGImageRef image = CGImageSourceCreateImageAtIndex(_imageSourceRef, idx, NULL);
-        frame = [UIImage imageWithCGImage:image scale:_scale orientation:UIImageOrientationUp];
-        CFRelease(image);
-    }
 	
     if (shouldPreload) {
-        if(idx != 0) {
+        if (idx != 0) {
 			if (self.images.count > _prefetchedNum) {
 				@synchronized(self.images) {
-					[self.images replaceObjectAtIndex:idx withObject:[NSNull null]];
+					[self.images replaceObjectAtIndex:idx
+										   withObject:[NSNull null]];
 				}
 			}
         }
 		
         NSUInteger nextReadIdx = (idx + _prefetchedNum);
-        for(NSUInteger i=idx+1; i<=nextReadIdx; i++) {
-            NSUInteger _idx = i%self.images.count;
-            if([self.images[_idx] isKindOfClass:[NSNull class]]) {
+        for (NSUInteger i = idx + 1; i <= nextReadIdx; i ++) {
+            NSUInteger wrappedIdx = (i % self.images.count);
+            if ([self.images[wrappedIdx] isKindOfClass:[NSNull class]]) {
                 dispatch_async(readFrameQueue, ^{
-                    CGImageRef image = CGImageSourceCreateImageAtIndex(_imageSourceRef, _idx, NULL);
                     @synchronized(self.images) {
-                        [self.images replaceObjectAtIndex:_idx withObject:[UIImage imageWithCGImage:image scale:_scale orientation:UIImageOrientationUp]];
+						CGImageRef image = CGImageSourceCreateImageAtIndex(_imageSourceRef, wrappedIdx, NULL);
+						UIImage *img = [UIImage imageWithCGImage:image
+														   scale:_scale
+													 orientation:UIImageOrientationUp];
+                        [self.images replaceObjectAtIndex:wrappedIdx
+											   withObject:img];
+						CFRelease(image);
                     }
-                    CFRelease(image);
                 });
             }
         }
@@ -294,12 +330,13 @@ inline static BOOL isRetinaFilePath(NSString *path)
 }
 
 
+
 - (void)dropPrefetchedFrames
 {
 	[self waitForInitialization];
-
-	NSUInteger c = self.images.count;
+	
 	@synchronized(self.images) {
+		NSUInteger c = self.images.count;
 		for (NSUInteger i = 1; i < c; i++) {
 			self.images[i] = [NSNull null];
 		}
@@ -307,7 +344,10 @@ inline static BOOL isRetinaFilePath(NSString *path)
 }
 
 
+
 #pragma mark - Compatibility methods
+
+
 
 - (CGSize)size
 {
@@ -319,16 +359,21 @@ inline static BOOL isRetinaFilePath(NSString *path)
     return [super size];
 }
 
+
+
 - (CGImageRef)CGImage
 {
 	[self waitForInitialization];
 
     if (self.images.count) {
         return [[self.images objectAtIndex:0] CGImage];
-    } else {
+    }
+	else {
         return [super CGImage];
     }
 }
+
+
 
 - (UIImageOrientation)imageOrientation
 {
@@ -336,10 +381,13 @@ inline static BOOL isRetinaFilePath(NSString *path)
 
     if (self.images.count) {
         return [[self.images objectAtIndex:0] imageOrientation];
-    } else {
+    }
+	else {
         return [super imageOrientation];
     }
 }
+
+
 
 - (CGFloat)scale
 {
@@ -347,10 +395,13 @@ inline static BOOL isRetinaFilePath(NSString *path)
 	
 	if (self.images.count) {
         return [(UIImage *)[self.images objectAtIndex:0] scale];
-    } else {
+    }
+	else {
         return [super scale];
     }
 }
+
+
 
 - (NSTimeInterval)duration
 {
@@ -374,7 +425,8 @@ inline static BOOL isRetinaFilePath(NSString *path)
 
 
 
-- (void)dealloc {
+- (void)dealloc
+{
     if(_imageSourceRef) {
         CFRelease(_imageSourceRef);
     }
@@ -384,4 +436,8 @@ inline static BOOL isRetinaFilePath(NSString *path)
     }
 }
 
+
+
 @end
+
+
