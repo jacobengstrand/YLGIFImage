@@ -230,8 +230,9 @@ inline static BOOL isRetinaFilePath(NSString *path)
 			// Load first frame only
 			CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
 			UIImage *firstFrame = [UIImage imageWithCGImage:image scale:scale orientation:UIImageOrientationUp];
-			[self.images replaceObjectAtIndex:0 withObject:firstFrame];
-			
+			if (firstFrame != nil) {
+				[self.images replaceObjectAtIndex:0 withObject:firstFrame];
+			}
 			// Find out how many frames we can prefetch and keep in RAM.
 			NSUInteger frameDataSize = [YLGIFImage sizeOfImageRef:image];
 			NSUInteger totalSize = numberOfFrames * frameDataSize;
@@ -246,7 +247,8 @@ inline static BOOL isRetinaFilePath(NSString *path)
 				_prefetchedNum = numberOfFrames;
 			}
 			
-			CFRelease(image);
+			if (image != nil)
+				CFRelease(image);
 			CFRelease(imageSource);
 		}
 		dispatch_semaphore_signal(_setupSemaphore);
@@ -290,10 +292,12 @@ inline static BOOL isRetinaFilePath(NSString *path)
 		frame = self.images[idx];
 		if ([frame isKindOfClass:[NSNull class]]) {
 			CGImageRef image = CGImageSourceCreateImageAtIndex(_imageSourceRef, idx, NULL);
-			frame = [UIImage imageWithCGImage:image
-										scale:_scale
-								  orientation:UIImageOrientationUp];
-			CFRelease(image);
+			if (image != nil) {
+				frame = [UIImage imageWithCGImage:image
+											scale:_scale
+									  orientation:UIImageOrientationUp];
+				CFRelease(image);
+			}
 		}
 	}
 	
@@ -314,12 +318,14 @@ inline static BOOL isRetinaFilePath(NSString *path)
                 dispatch_async(readFrameQueue, ^{
                     @synchronized(self.images) {
 						CGImageRef image = CGImageSourceCreateImageAtIndex(_imageSourceRef, wrappedIdx, NULL);
-						UIImage *img = [UIImage imageWithCGImage:image
-														   scale:_scale
-													 orientation:UIImageOrientationUp];
-                        [self.images replaceObjectAtIndex:wrappedIdx
-											   withObject:img];
-						CFRelease(image);
+						if (image != nil) {
+							UIImage *img = [UIImage imageWithCGImage:image
+															   scale:_scale
+														 orientation:UIImageOrientationUp];
+							[self.images replaceObjectAtIndex:wrappedIdx
+												   withObject:img];
+							CFRelease(image);
+						}
                     }
                 });
             }
