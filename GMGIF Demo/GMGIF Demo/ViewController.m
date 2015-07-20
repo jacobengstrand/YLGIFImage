@@ -19,7 +19,14 @@
 //	YLGIFImage *img = (YLGIFImage*)[YLGIFImage imageNamed:@"gum.gif"];
 	YLGIFImage *img = (YLGIFImage*)[YLGIFImage imageNamed:@"joy.gif"];
 	[_imageView setImage:img];
+	_imageView.delegate = self;
 	
+	_slider.minimumValue = 0;
+	_slider.maximumValue = img.images.count;
+	[_slider addTarget:self
+				action:@selector(handleNewSliderValue:)
+	  forControlEvents:UIControlEventValueChanged];
+
 	[self updateButton];
 }
 
@@ -41,6 +48,43 @@
 			   forState:UIControlStateNormal];
 }
 
+
+
+- (void)handleNewSliderValue: (id)sender
+{
+	[_imageView stopAnimating];
+	NSUInteger idx = (NSUInteger)roundf(_slider.value);
+	[_imageView showFrameIndex:idx];
+}
+
+
+
+#pragma mark - YLImageView callbacks
+
+
+
+- (void)gifImageView:(YLImageView*)view didShowFrameIndex:(NSUInteger)frameIdx
+{
+	_slider.value = frameIdx;
+}
+
+
+
+- (void)gifImageViewDidStartAnimating:(YLImageView*)view
+{
+	[self updateButton];
+}
+
+
+
+- (void)gifImageViewDidStopAnimating:(YLImageView*)view
+{
+	[self updateButton];
+}
+
+
+
+
 #pragma mark - public
 
 
@@ -51,8 +95,6 @@
 		[_imageView stopAnimating];
 	else
 		[_imageView startAnimating];
-
-	[self updateButton];
 }
 
 

@@ -8,8 +8,22 @@
 
 #import <UIKit/UIKit.h>
 
+
+@class YLImageView;
+
+
+@protocol YLImageViewDelegate <NSObject>
+- (void)gifImageView:(YLImageView*)view didShowFrameIndex:(NSUInteger)frameIdx;
+- (void)gifImageViewDidStartAnimating:(YLImageView*)view;
+- (void)gifImageViewDidStopAnimating:(YLImageView*)view;
+@end
+
+
 @interface YLImageView : UIImageView
 
 @property (nonatomic, copy) NSString *runLoopMode;
+@property (nonatomic, weak) id<YLImageViewDelegate> delegate;
+
+-(void)showFrameIndex:(NSUInteger)frameNumber;
 
 @end

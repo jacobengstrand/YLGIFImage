@@ -151,6 +151,9 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
  
 	_wantsToAnimate = NO;
     _displayLink.paused = YES;
+	if ([_delegate respondsToSelector:@selector(gifImageViewDidStopAnimating:)]) {
+		[_delegate gifImageViewDidStopAnimating:self];
+	}
 }
 
 
@@ -170,6 +173,9 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
 		[self setupDisplayLink];
 		_loopCountdown = self.animatedImage.loopCount ?: NSUIntegerMax;
 		self.displayLink.paused = NO;
+		if ([_delegate respondsToSelector:@selector(gifImageViewDidStartAnimating:)]) {
+			[_delegate gifImageViewDidStartAnimating:self];
+		}
 	}
 }
 
@@ -204,6 +210,9 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
         self.currentFrame = [self.animatedImage getFrameWithIndex:_currentFrameIndex
 														  preload:YES];
 		[self.layer setNeedsDisplay];
+		if ([_delegate respondsToSelector:@selector(gifImageView:didShowFrameIndex:)]) {
+			[_delegate gifImageView:self didShowFrameIndex:_currentFrameIndex];
+		}
 	}
 }
 
@@ -282,6 +291,9 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
 	_shouldAnimate = NO;
 	_displayLink.paused = YES;
 	[_animatedImage dropPrefetchedFrames];
+	if ([_delegate respondsToSelector:@selector(gifImageViewDidStopAnimating:)]) {
+		[_delegate gifImageViewDidStopAnimating:self];
+	}
 }
 
 
@@ -292,6 +304,20 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
 		if (! self.isAnimating) {
 			[_animatedImage dropPrefetchedFrames];
 		}
+	}
+}
+
+
+
+- (void)showFrameIndex:(NSUInteger)frameNumber
+{
+	_currentFrameIndex = MIN(frameNumber, [self.animatedImage.images count] - 1);
+	self.currentFrame = [self.animatedImage getFrameWithIndex:_currentFrameIndex
+													  preload:NO];
+	[self.layer setNeedsDisplay];
+
+	if ([_delegate respondsToSelector:@selector(gifImageView:didShowFrameIndex:)]) {
+		[_delegate gifImageView:self didShowFrameIndex:_currentFrameIndex];
 	}
 }
 
