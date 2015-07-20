@@ -13,6 +13,7 @@
 
 
 @protocol YLImageViewDelegate <NSObject>
+@optional
 - (void)gifImageView:(YLImageView*)view didShowFrameIndex:(NSUInteger)frameIdx;
 - (void)gifImageViewDidStartAnimating:(YLImageView*)view;
 - (void)gifImageViewDidStopAnimating:(YLImageView*)view;
