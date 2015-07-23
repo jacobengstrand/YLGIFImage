@@ -246,9 +246,10 @@ const NSTimeInterval kMaxTimeStep = 1; // note: To avoid spiral-o-death
 {
     [super didMoveToSuperview];
     if (! self.superview) {
-		//Doesn't have superview, let's check later if we need to remove the displayLink
+		// Doesn't have superview, let's check later if we need to remove the displayLink
         dispatch_async(dispatch_get_main_queue(), ^{
-			if (self.superview != nil) {
+			if (! self.superview) {
+				// Still no superview. Stop animation and break the retain cycle.
 				[_displayLink invalidate];
 				_displayLink = nil;
 			}
