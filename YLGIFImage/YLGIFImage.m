@@ -235,7 +235,6 @@ inline static BOOL isRetinaFilePath(NSString *path)
 			}
 			// Find out how many frames we can prefetch and keep in RAM.
 			NSUInteger frameDataSize = [YLGIFImage sizeOfImageRef:image];
-			NSUInteger totalSize = numberOfFrames * frameDataSize;
 			NSUInteger maxPrefetchedNum = (NSUInteger)floor(2000000.0 / frameDataSize); // Prefetched frames should use max 2 MB RAM in total.
 			if (maxPrefetchedNum < numberOfFrames) {
 				// If we can't keep all frames in RAM, the CPU will have to decode each frame over and over anyway,
