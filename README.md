@@ -1,34 +1,41 @@
 YLGIFImage
 ==========
 
-Asynchronized GIF image class and Image viewer supporting play/stop GIF images. 
+###This is a greatly enhanced fork of the original YLGIFImage project.
 
-It just use very less memory. Following GIF usually will cost almost 600MB memory if it is fully decoded (800x600x389x4 Bytes), but using YLGIFImage, it just use about 30MB memory.
+The bugs in the original project have been fixed, the GIF player is much more efficient, and new features have been added.
 
-<img src="./YLGIFImageDemo/YLGIFImageDemo/joy.gif" align="middle" width="320" />
+<img src="./GMGIF%20Demo/joy.gif" align="middle" width="320" />
 
-For this gif file, iOS Pinterest also will crash, but using YLGIFImage, it won't!
+###Enhancements
+• Bugfixes. No more crashing on malformed GIF files, for instance.
 
-####Swift support
-I created another project to implement YLGIFImage using swift, it's called [YLGIFImage-Swift](https://github.com/liyong03/YLGIFImage-Swift).
+• Much smarter about memory usage. Only prefetches and decodes frames if the whole animation can fit under the memory limit (set to 2MB but you can change it to whatever you want).
 
-####Get Start
-Using [CocoaPods](http://cocoapods.org/) to get start, you can add following line to your Podfile:
-    
-    pod 'YLGIFImage'
+• Animations stop when app is put in backround, and cached frames are released.
 
-####Using it
-For using YLGIFImage, it's very simple:
+• Animations restart when app returns to the foreground.
 
-    YLImageView* imageView = [[YLImageView alloc] initWithFrame:CGRectMake(0, 160, 320, 240)];
-    [self.view addSubview:imageView];
-    imageView.image = [YLGIFImage imageNamed:@"joy.gif"];
+• Delegate callbacks via an optional protocol:
 
-Here is the demo looks like:
+    @protocol YLImageViewDelegate <NSObject>
+    @optional
+    - (void)gifImageView:(YLImageView*)view didShowFrameIndex:(NSUInteger)frameIdx;
+    - (void)gifImageViewDidStartAnimating:(YLImageView*)view;
+    - (void)gifImageViewDidStopAnimating:(YLImageView*)view;
+    @end
 
+###Usage
+Super simple:
 
-<img align="middle" src="./screenshot.png" width="320" />
+    YLGIFImage *img = (YLGIFImage*)[YLGIFImage imageNamed:@"joy.gif"];
+    [myImageView setImage:img];
+    myImageView.delegate = self;
 
-Thanks
-==========
-Thanks to [OLImageView](https://github.com/ondalabs/OLImageView)! I referred a lot to this project, especially using CADisplayLink to play the animation.
+Then start the animation:
+
+    [myImageView startAnimating];
+
+Stop the animation:
+
+    [myImageView stopAnimating];
