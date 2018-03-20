@@ -1,13 +1,13 @@
 YLGIFImage
 ==========
 
-####This is a greatly enhanced fork of the original YLGIFImage project.
+### This is a greatly enhanced fork of the original YLGIFImage project.
 
 The bugs in the original project have been fixed, the GIF player is much more efficient, and new features have been added.
 
 <img src="./GMGIF%20Demo/joy.gif" align="middle" width="320" />
 
-####Enhancements
+### Enhancements
 • Bugfixes. No more crashing on malformed GIF files, for instance.
 
 • Much smarter about memory usage. Only prefetches and decodes frames if the whole animation can fit under the memory limit (set to 2MB but you can change it to whatever you want).
@@ -25,7 +25,7 @@ The bugs in the original project have been fixed, the GIF player is much more ef
     - (void)gifImageViewDidStopAnimating:(YLImageView*)view;
     @end
 
-####Usage
+### Usage
 Super simple:
 
     YLGIFImage *img = (YLGIFImage*)[YLGIFImage imageNamed:@"joy.gif"];
