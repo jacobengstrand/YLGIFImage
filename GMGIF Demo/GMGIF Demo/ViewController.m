@@ -58,6 +58,12 @@
 	sliderF.size.width = videoF.size.width;
 	_slider.frame = sliderF;
 
+	CGRect labelF = _frameLabel.frame;
+	labelF.origin.x = CGRectGetMinX(videoF);
+	labelF.origin.y = CGRectGetMaxY(sliderF) + 20;
+	labelF.size.width = videoF.size.width;
+	_frameLabel.frame = labelF;
+	
 //	_imageView.layer.borderWidth = 2;
 //	_imageView.layer.borderColor = [UIColor greenColor].CGColor;
 //	_play.layer.borderWidth = 2;
@@ -100,6 +106,8 @@
 - (void)gifImageView:(YLImageView*)view didShowFrameIndex:(NSUInteger)frameIdx
 {
 	_slider.value = frameIdx;
+	
+	_frameLabel.text = [NSString stringWithFormat: @"Frame #%lu", (unsigned long)frameIdx];
 }
 
 

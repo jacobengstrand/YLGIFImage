@@ -15,6 +15,7 @@
 @property (nonatomic) IBOutlet YLImageView *imageView;
 @property (nonatomic) IBOutlet UIButton *play;
 @property (nonatomic) IBOutlet UISlider *slider;
+@property (nonatomic) IBOutlet UILabel *frameLabel;
 
 - (IBAction)userDidTapPlay:(id)sender;
 @end
