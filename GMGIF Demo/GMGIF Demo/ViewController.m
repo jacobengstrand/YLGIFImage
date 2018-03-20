@@ -26,8 +26,42 @@
 	[_slider addTarget:self
 				action:@selector(handleNewSliderValue:)
 	  forControlEvents:UIControlEventValueChanged];
-
+	
 	[self updateButton];
+}
+
+
+
+- (void)viewDidLayoutSubviews {
+	[super viewDidLayoutSubviews];
+	
+	CGRect viewB = self.view.bounds;
+	
+	CGSize imageSize = _imageView.image.size;
+	CGFloat aspect = imageSize.width / imageSize.height;
+	
+	CGRect videoF = _imageView.frame;
+	videoF.origin.x = 20;
+	videoF.size.width = viewB.size.width - 2 * videoF.origin.x;
+	videoF.size.height = ceil(videoF.size.width / aspect);
+	_imageView.frame = videoF;
+	
+	CGRect buttonF = _play.frame;
+	buttonF.origin.x = CGRectGetMinX(videoF);
+	buttonF.origin.y = CGRectGetMaxY(videoF) + 20;
+	buttonF.size.width = videoF.size.width;
+	_play.frame = buttonF;
+	
+	CGRect sliderF = _slider.frame;
+	sliderF.origin.x = CGRectGetMinX(videoF);
+	sliderF.origin.y = CGRectGetMaxY(buttonF) + 20;
+	sliderF.size.width = videoF.size.width;
+	_slider.frame = sliderF;
+
+//	_imageView.layer.borderWidth = 2;
+//	_imageView.layer.borderColor = [UIColor greenColor].CGColor;
+//	_play.layer.borderWidth = 2;
+//	_play.layer.borderColor = [UIColor redColor].CGColor;
 }
 
 
